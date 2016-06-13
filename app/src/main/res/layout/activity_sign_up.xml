@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="appewtc.masterung.pbrurun.SignUpActivity">
+    tools:context="appewtc.masterung.pbrurun.SignUpActivity"
+    android:background="@drawable/bg27">
 
     <TextView
         android:layout_width="wrap_content"
@@ -16,7 +17,8 @@
         android:id="@+id/textView"
         android:layout_centerHorizontal="true"
         android:textSize="@dimen/h1"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@color/text" />
 
     <Button
         android:layout_width="match_parent"
@@ -31,7 +33,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView"
         android:layout_margin="15dp"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:background="#1effffff">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -44,13 +47,16 @@
                 android:text="Name :"
                 android:id="@+id/textView2"
                 android:layout_weight="1"
-                android:textSize="@dimen/h2" />
+                android:textSize="@dimen/h2"
+                android:textColor="@color/text" />
 
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/editText"
-                android:layout_weight="2" />
+                android:layout_weight="2"
+                android:textColor="@color/text"
+                android:inputType="text" />
         </LinearLayout>
 
         <LinearLayout
@@ -64,13 +70,16 @@
                 android:text="User :"
                 android:id="@+id/textView3"
                 android:layout_weight="1"
-                android:textSize="@dimen/h2" />
+                android:textSize="@dimen/h2"
+                android:textColor="@color/text" />
 
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/editText2"
-                android:layout_weight="2" />
+                android:layout_weight="2"
+                android:textColor="@color/text"
+                android:inputType="text" />
         </LinearLayout>
 
         <LinearLayout
@@ -84,13 +93,16 @@
                 android:text="Password :"
                 android:id="@+id/textView4"
                 android:layout_weight="1"
-                android:textSize="@dimen/h2" />
+                android:textSize="@dimen/h2"
+                android:textColor="@color/text" />
 
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/editText3"
-                android:layout_weight="2" />
+                android:layout_weight="2"
+                android:textColor="@color/text"
+                android:inputType="text" />
         </LinearLayout>
 
         <TextView
@@ -99,7 +111,8 @@
             android:text="Avata"
             android:id="@+id/textView5"
             android:textSize="@dimen/h2"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/text" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -153,7 +166,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/radioButton"
                 android:layout_weight="1"
-                android:layout_marginLeft="20dp" />
+                android:layout_marginLeft="20dp"
+                android:checked="true" />
 
             <RadioButton
                 android:layout_width="wrap_content"
