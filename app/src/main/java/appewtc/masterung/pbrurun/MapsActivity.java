@@ -5,6 +5,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -57,6 +58,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }   // Main Method
+
+    private class ConnectedLocation extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+            return null;
+        }   // doIn
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }   //onPost
+    }
+
+
+
 
     @Override
     protected void onResume() {
@@ -153,6 +169,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         editUserLocationToServer();
 
+        makeAllMarker();
+
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -163,6 +181,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }, 3000);
 
     }   // createMyLoop
+
+    private void makeAllMarker() {
+
+        mMap.clear();
+
+    }   // makeAllMarker
 
     private void editUserLocationToServer() {
 
