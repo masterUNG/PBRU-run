@@ -75,7 +75,13 @@ public class MainActivity extends AppCompatActivity {
 
             if (passwordString.equals(resultStrings[3])) {
 
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                intent.putExtra("Login", resultStrings);
+                startActivity(intent);
+
                 Toast.makeText(this, "Welcome " + resultStrings[1], Toast.LENGTH_SHORT).show();
+
+                finish();
 
             } else {
                 Toast.makeText(this, "Password False", Toast.LENGTH_SHORT).show();

@@ -2,5 +2,6 @@
     <string name="app_name">PBRU run</string>
 
     <string name="signup">Sign Up</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>
