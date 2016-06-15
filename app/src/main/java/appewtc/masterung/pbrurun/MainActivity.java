@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText userEditText, passwordEditText;
     private ImageView imageView;
     private static final String urlLogo = "http://swiftcodingthai.com/pbru3/logo_pbru.png";
-
+    private String userString, passwordString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,39 @@ public class MainActivity extends AppCompatActivity {
 
     public void clickSignIn(View view) {
 
-    }
+        userString = userEditText.getText().toString().trim();
+        passwordString = passwordEditText.getText().toString().trim();
+
+        if (userString.equals("") || passwordString.equals("")) {
+            Toast.makeText(this, "มีช่องว่าง กรุณากรอกทุกช่อง คะ", Toast.LENGTH_SHORT).show();
+        } else {
+            searchMyUser();
+        }
+
+    }   // clickSignIn
+
+    private void searchMyUser() {
+
+        try {
+
+            String[] resultStrings = myManage.searchUser(userString);
+
+            if (passwordString.equals(resultStrings[3])) {
+
+                Toast.makeText(this, "Welcome " + resultStrings[1], Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(this, "Password False", Toast.LENGTH_SHORT).show();
+            }
+
+
+        } catch (Exception e) {
+            Toast.makeText(this,"ไม่มี " + userString+ " ในฐานข้อมูลของเรา",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+
+    }   // searchMyUser
 
 
     private class ConnectedServer extends AsyncTask<Void, Void, String> {
