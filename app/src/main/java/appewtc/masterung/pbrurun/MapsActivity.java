@@ -5,8 +5,9 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -14,7 +15,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -22,11 +31,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double userLatADouble, userLngADouble;
     private LocationManager locationManager;
     private Criteria criteria;
+    private String[] userLoginStrings;
+    private MyData myData;
+    private static final String urlEditLocation = "http://swiftcodingthai.com/pbru3/edit_location.php";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        userLoginStrings = getIntent().getStringArrayExtra("Login");
+
+        myData = new MyData();
 
         //Setup Location
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -44,6 +61,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
+
+        Log.d("pbruV5", "onResume");
 
         locationManager.removeUpdates(locationListener);
 
@@ -120,10 +139,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        //Setup Center map
+        LatLng latLng = new LatLng(myData.getLatADouble(), myData.getLngADouble());
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+
+        //Create My Loop
+        createMyLoop();
+
+
     }   // onMapReady
+
+    private void createMyLoop() {
+
+        editUserLocationToServer();
+
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                createMyLoop();
+            }
+        }, 3000);
+
+    }   // createMyLoop
+
+    private void editUserLocationToServer() {
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        RequestBody requestBody = new FormEncodingBuilder()
+                .add("isAdd", "true")
+                .add("id", userLoginStrings[0])
+                .add("Lat", Double.toString(userLatADouble))
+                .add("Lng", Double.toString(userLngADouble))
+                .build();
+        Request.Builder builder = new Request.Builder();
+        Request request = builder.url(urlEditLocation).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+
+            }
+        });
+
+    }
 
 }   // Main Class
