@@ -53,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
 
     }   // Main Method
 
+    public void clickSignIn(View view) {
+
+    }
+
+
     private class ConnectedServer extends AsyncTask<Void, Void, String> {
 
         @Override
