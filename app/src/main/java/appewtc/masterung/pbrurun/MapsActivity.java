@@ -15,7 +15,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -23,6 +25,9 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -35,6 +40,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String[] userLoginStrings;
     private MyData myData;
     private static final String urlEditLocation = "http://swiftcodingthai.com/pbru3/edit_location.php";
+    private static final String urlUser = "http://swiftcodingthai.com/pbru3/get_user.php";
+    private int[] avataInts, buildInts;
+    private double[] buildLatDoubles, buildLngDoubles;
 
 
     @Override
@@ -45,6 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         userLoginStrings = getIntent().getStringArrayExtra("Login");
 
         myData = new MyData();
+        avataInts = myData.getAvataInts();
 
         //Setup Location
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -62,12 +71,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private class ConnectedLocation extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... voids) {
-            return null;
+
+            try {
+
+                OkHttpClient okHttpClient = new OkHttpClient();
+                Request.Builder builder = new Request.Builder();
+                Request request = builder.url(urlUser).build();
+                Response response = okHttpClient.newCall(request).execute();
+                return response.body().string();
+
+            } catch (Exception e) {
+                return null;
+            }
+
         }   // doIn
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
+            Log.d("pbruV6", "s ==> " + s);
+
+            try {
+
+                JSONArray jsonArray = new JSONArray(s);
+                for (int i=0;i<jsonArray.length();i++) {
+
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    double douLat = Double.parseDouble(jsonObject.getString("Lat"));
+                    double douLng = Double.parseDouble(jsonObject.getString("Lng"));
+                    LatLng latLng = new LatLng(douLat, douLng);
+                    String strTitle = jsonObject.getString("Name");
+                    int intIndex = Integer.parseInt(jsonObject.getString("Avata"));
+
+                    mMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title(strTitle)
+                    .icon(BitmapDescriptorFactory.fromResource(avataInts[intIndex])));
+
+
+                }   // for
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+
         }   //onPost
     }
 
@@ -185,6 +235,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void makeAllMarker() {
 
         mMap.clear();
+
+        ConnectedLocation connectedLocation = new ConnectedLocation();
+        connectedLocation.execute();
+
+        buildInts = myData.getBuildIconInts();
+        buildLatDoubles = myData.getBuildLatDoubles();
+        buildLngDoubles = myData.getBuildLngDoubles();
+
+        for (int i=0;i<buildInts.length;i++) {
+            mMap.addMarker(new MarkerOptions()
+            .position(new LatLng(buildLatDoubles[i], buildLngDoubles[i]))
+            .icon(BitmapDescriptorFactory.fromResource(buildInts[i])));
+        }
 
     }   // makeAllMarker
 
